@@ -29,4 +29,7 @@ export class User {
 
 	@OneToMany(() => Issue, (issue) => issue.project)
 	issues: Issue[];
+
+	@OneToMany(() => Project, (project) => project.owner)
+	projectsCreated: Project[];
 }
