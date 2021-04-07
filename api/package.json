@@ -6,7 +6,9 @@
 	"scripts": {
 		"dev": "ts-node-dev --respawn --pretty --transpile-only src/app.ts",
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"start": "ts-node src/app.ts"
+		"start": "ts-node src/app.ts",
+		"add-migration": "ts-node ./node_modules/typeorm/cli.js migration:generate -n",
+		"update-database": "ts-node ./node_modules/typeorm/cli.js migration:run"
 	},
 	"repository": {
 		"type": "git",
