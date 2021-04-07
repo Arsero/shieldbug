@@ -1,5 +1,5 @@
 {
-	"name": "shieldbug",
+	"name": "api",
 	"version": "1.0.0",
 	"description": "A bug tracker made with NodeJs and Angular",
 	"main": "index.js",
