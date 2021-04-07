@@ -10,8 +10,8 @@ import { User } from './User';
 
 @Entity()
 export class Project {
-	@PrimaryGeneratedColumn()
-	id: number;
+	@PrimaryGeneratedColumn('uuid')
+	id: string;
 
 	@Column()
 	title: string;
