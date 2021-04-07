@@ -13,6 +13,9 @@ export class Issue {
 	title: string;
 
 	@Column()
+	description: string;
+
+	@Column()
 	lastUpdate: Date;
 
 	@Column({

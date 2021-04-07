@@ -10,10 +10,10 @@ export class Project {
 	title: string;
 
 	@Column()
-	created: Date;
+	description: string;
 
 	@Column()
-	description: string;
+	created: Date;
 
 	@OneToMany(() => Issue, (issue) => issue.project)
 	issues: Issue[];
