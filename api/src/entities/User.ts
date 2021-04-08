@@ -21,7 +21,7 @@ export class User {
 	email: string;
 
 	@Column()
-	hashPassword: string;
+	password: string;
 
 	@ManyToMany(() => Project)
 	@JoinTable()
