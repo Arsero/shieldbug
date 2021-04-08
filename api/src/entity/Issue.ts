@@ -18,18 +18,10 @@ export class Issue {
 	@Column()
 	lastUpdate: Date;
 
-	@Column({
-		type: 'enum',
-		enum: State,
-		default: State.Open,
-	})
+	@Column('int')
 	state: State;
 
-	@Column({
-		type: 'enum',
-		enum: Priority,
-		default: Priority.Trivial,
-	})
+	@Column('int')
 	priority: Priority;
 
 	@ManyToOne(() => Project, (project) => project.issues)
