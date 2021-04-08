@@ -16,21 +16,25 @@ export class UserService {
 	}
 
 	async login(email: string, password: string) {
+		if (!email || !password) {
+			throw Error('Bad parameter');
+		}
+
 		const user = await this.userRepository.findOne({ email: email });
 		if (!user) {
 			throw Error('User not found');
 		}
 
 		if (bcrypt.compareSync(password, user.password)) {
-			const username = user.username;
-			return jwt.sign({ username }, process.env.SECRET_KEY, {
+			const email = user.email;
+			return jwt.sign({ email }, process.env.SECRET_KEY, {
 				algorithm: 'HS256',
 				expiresIn: '24h',
 			});
 		}
 	}
 
-	hashPassword(value: string) {
+	private hashPassword(value: string) {
 		return bcrypt.hashSync(value, 10);
 	}
 }

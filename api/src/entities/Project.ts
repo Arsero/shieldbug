@@ -1,3 +1,4 @@
+import { IsDate, IsNotEmpty } from 'class-validator';
 import {
 	Entity,
 	PrimaryGeneratedColumn,
@@ -14,12 +15,16 @@ export class Project {
 	id: string;
 
 	@Column()
+	@IsNotEmpty({ message: 'The title is required' })
 	title: string;
 
 	@Column()
+	@IsNotEmpty({ message: 'The description is required' })
 	description: string;
 
 	@Column()
+	@IsNotEmpty({ message: 'The created date is required' })
+	@IsDate()
 	created: Date;
 
 	@OneToMany(() => Issue, (issue) => issue.project)
