@@ -22,7 +22,9 @@ export class UserService {
 		}
 
 		if (bcrypt.compareSync(password, user.password)) {
-			return jwt.sign({ user }, 'yourSecretKey', {
+			const username = user.username;
+			return jwt.sign({ username }, process.env.SECRET_KEY, {
+				algorithm: 'HS256',
 				expiresIn: '24h',
 			});
 		}
