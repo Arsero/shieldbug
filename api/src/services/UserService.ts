@@ -17,13 +17,13 @@ export default class UserService {
 			throw new EntityException('Missing parameter');
 		}
 
-		await this.userRepository
-			.findOne({
-				where: [{ username: user.username }, { email: user.email }],
-			})
-			.then((userDb) => {
-				throw new EntityException('User already exists');
-			});
+		const userDb = await this.userRepository.findOne({
+			where: [{ username: user.username }, { email: user.email }],
+		});
+
+		if (userDb) {
+			throw new EntityException('User already exists');
+		}
 
 		const secureUser = {
 			...user,
@@ -33,22 +33,26 @@ export default class UserService {
 		return this.userRepository.save(secureUser);
 	}
 
-	public login = async (email: string, password: string) => {
+	public async login(email: string, password: string) {
+		if (!email || !password) {
+			throw new EntityException('Missing parameter');
+		}
+
 		const user = await this.userRepository.findOne({ email: email });
 		if (!user) {
-			throw Error('User not found');
+			throw new EntityException('User not found');
 		}
 
 		if (bcrypt.compareSync(password, user.password)) {
 			const email = user.email;
-			return jwt.sign({ email }, process.env.SECRET_KEY, {
+			return jwt.sign({ email }, process.env.SECRET_TOKEN, {
 				algorithm: 'HS256',
 				expiresIn: '24h',
 			});
 		} else {
-			throw new Error('Bad credentials');
+			throw new EntityException('Username or password is incorrect');
 		}
-	};
+	}
 
 	private hashPassword = (value: string) => {
 		return bcrypt.hashSync(value, 10);

@@ -14,16 +14,16 @@ export default class UserController {
 		this.routes();
 	}
 
-	public login(req: Request, res: Response) {
+	public login = async (req: Request, res: Response) => {
 		try {
 			const [email, password] = [req.body.email, req.body.password];
-			this.userService.login(email, password);
+			const token = await this.userService.login(email, password);
 
-			res.status(200).send();
+			res.status(200).send(token);
 		} catch (error) {
-			throw new HttpException(400, error.message);
+			SendError(new HttpException(401, error.message), res);
 		}
-	}
+	};
 
 	public signup = async (req: Request, res: Response) => {
 		try {
