@@ -8,13 +8,13 @@ import {
 	OneToMany,
 	Unique,
 } from 'typeorm';
-import { Issue } from './Issue';
-import { Project } from './Project';
+import Issue from './Issue';
+import Project from './Project';
 
 @Entity()
 @Unique(['username'])
 @Unique(['email'])
-export class User {
+export default class User {
 	@PrimaryGeneratedColumn()
 	id: number;
 

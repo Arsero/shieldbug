@@ -6,11 +6,11 @@ import {
 	OneToMany,
 	ManyToOne,
 } from 'typeorm';
-import { Issue } from './Issue';
-import { User } from './User';
+import Issue from './Issue';
+import User from './User';
 
 @Entity()
-export class Project {
+export default class Project {
 	@PrimaryGeneratedColumn('uuid')
 	id: string;
 
