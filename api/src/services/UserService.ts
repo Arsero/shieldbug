@@ -1,15 +1,14 @@
-import { getConnection, Repository } from 'typeorm';
+import { getRepository, Repository } from 'typeorm';
 import User from '../entities/User';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { validate } from 'class-validator';
 import EntityException from '../common/exceptions/EntityException';
 
 export default class UserService {
 	private userRepository: Repository<User>;
 
 	constructor() {
-		this.userRepository = getConnection().getRepository(User);
+		this.userRepository = getRepository(User);
 	}
 
 	public async create(user: User) {
