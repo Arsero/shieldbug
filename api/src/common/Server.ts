@@ -1,3 +1,4 @@
+import { notFound } from './../middleware/notFound';
 import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
@@ -15,6 +16,7 @@ export default class Server {
 		this.configuration();
 		this.controllers();
 		this.routes();
+		this.middlewares();
 	}
 
 	public configuration() {
@@ -32,6 +34,10 @@ export default class Server {
 	public routes() {
 		this.app.use('/user/', this.userController.router);
 		this.app.use('/project/', this.projectController.router);
+	}
+
+	public middlewares() {
+		this.app.use(notFound);
 	}
 
 	public start() {
