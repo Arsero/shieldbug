@@ -28,10 +28,9 @@ export default class UserController {
 	public signup = async (req: Request, res: Response) => {
 		try {
 			const user = req.body as User;
-			console.log(this);
 			const newUser = await this.userService.create(user);
 
-			res.status(200).send(newUser);
+			res.status(201).send(newUser);
 		} catch (error) {
 			SendError(error, res);
 		}
