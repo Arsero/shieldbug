@@ -1,19 +1,20 @@
 import cors from 'cors';
-import express, { Request, Response } from 'express';
+import express from 'express';
 import helmet from 'helmet';
+import ProjectController from '../controllers/ProjectController';
 import UserController from './../controllers/UserController';
 
 export default class Server {
-	private userController: UserController;
 	private app: express.Application;
 	private port: number;
+	private userController: UserController;
+	private projectController: ProjectController;
 
 	constructor() {
 		this.app = express();
 		this.configuration();
 		this.controllers();
 		this.routes();
-		this.middlewares();
 	}
 
 	public configuration() {
@@ -25,16 +26,13 @@ export default class Server {
 
 	public controllers() {
 		this.userController = new UserController();
+		this.projectController = new ProjectController();
 	}
 
 	public routes() {
-		this.app.get('/', (req: Request, res: Response) => {
-			res.send('Hello world!');
-		});
 		this.app.use('/user/', this.userController.router);
+		this.app.use('/project/', this.projectController.router);
 	}
-
-	public middlewares() {}
 
 	public start() {
 		this.app.listen(this.port, () => {
