@@ -4,6 +4,7 @@ import express, { Request, Response, Router } from 'express';
 import SendError from '../common/utils/SendError';
 import Project from '../entities/Project';
 import User from '../entities/User';
+import HttpException from '../common/exceptions/HttpException';
 
 export default class ProjectController {
 	public router: Router;
@@ -48,12 +49,25 @@ export default class ProjectController {
 			const id = req.params.id;
 			const project = req.body as Project;
 
-			const newProject = await this.projectService.update(
-				id,
-				project,
-				req.userId
-			);
-			res.status(200).send(newProject);
+			if (!id) {
+				throw new HttpException(400, 'Bad parameter');
+			}
+			await this.projectService.update(id, project, req.userId);
+			res.status(200).send();
+		} catch (error) {
+			SendError(error, res);
+		}
+	};
+
+	public delete = async (req: Request, res: Response) => {
+		try {
+			const id = req.params.id;
+			if (!id) {
+				throw new HttpException(400, 'Bad parameter');
+			}
+
+			await this.projectService.delete(id, req.userId);
+			res.status(200).send();
 		} catch (error) {
 			SendError(error, res);
 		}
@@ -64,6 +78,7 @@ export default class ProjectController {
 
 		this.router.get('/', this.get);
 		this.router.post('/', this.post);
-		this.router.put('/:id', this.post);
+		this.router.put('/:id', this.put);
+		this.router.delete('/:id', this.delete);
 	}
 }
