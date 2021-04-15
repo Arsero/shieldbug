@@ -13,17 +13,16 @@ export const auth = (
 
 		if (authHeader) {
 			const token = authHeader.split(' ')[1];
-
-			jwt.verify(token, process.env.SECRET_KEY, (err, username) => {
+			jwt.verify(token, process.env.SECRET_TOKEN, (err, userId) => {
 				if (err) {
-					throw new HttpException(401, 'Not authorized');
+					throw new HttpException(401, 'Unauthorized');
 				}
 
-				req.username = username;
+				req.userId = userId.userId;
 				next();
 			});
 		} else {
-			throw new HttpException(400, 'Bad header');
+			throw new HttpException(401, 'Unauthorized');
 		}
 	} catch (error) {
 		SendError(error, res);

@@ -43,8 +43,8 @@ export default class UserService {
 		}
 
 		if (bcrypt.compareSync(password, user.password)) {
-			const email = user.email;
-			return jwt.sign({ email }, process.env.SECRET_TOKEN, {
+			const userId = user.id;
+			return jwt.sign({ userId }, process.env.SECRET_TOKEN, {
 				algorithm: 'HS256',
 				expiresIn: '24h',
 			});
