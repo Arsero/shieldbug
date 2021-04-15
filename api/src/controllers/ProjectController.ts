@@ -4,13 +4,11 @@ import express, { Request, Response, Router } from 'express';
 import SendError from '../common/utils/SendError';
 import Project from '../entities/Project';
 import HttpException from '../common/exceptions/HttpException';
-import UserService from '../services/UserService';
 import User from '../entities/User';
 
 export default class ProjectController {
 	public router: Router;
 	private projectService: ProjectService;
-	private userService: UserService;
 
 	constructor() {
 		this.projectService = new ProjectService();
