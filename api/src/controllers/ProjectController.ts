@@ -43,10 +43,27 @@ export default class ProjectController {
 		}
 	};
 
+	public put = async (req: Request, res: Response) => {
+		try {
+			const id = req.params.id;
+			const project = req.body as Project;
+
+			const newProject = await this.projectService.update(
+				id,
+				project,
+				req.userId
+			);
+			res.status(200).send(newProject);
+		} catch (error) {
+			SendError(error, res);
+		}
+	};
+
 	public routes() {
 		this.router.use(auth);
 
 		this.router.get('/', this.get);
 		this.router.post('/', this.post);
+		this.router.put('/:id', this.post);
 	}
 }

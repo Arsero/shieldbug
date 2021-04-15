@@ -22,8 +22,15 @@ export default class ProjectService {
 		return this.projectRepository.save(project);
 	}
 
-	public update(project: Project) {
-		return this.projectRepository.update({ id: project.id }, project);
+	public async update(id: string, project: Project, userId: number) {
+		const projectDb = await this.projectRepository.findOne(id);
+
+		if (!projectDb || projectDb.owner.id != userId) {
+			throw new EntityException('Project does not exist');
+		}
+
+		project.id = id;
+		return this.projectRepository.save(project);
 	}
 
 	public remove(projectId: string) {
