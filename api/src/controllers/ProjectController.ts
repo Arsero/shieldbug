@@ -3,12 +3,14 @@ import { auth } from './../middleware/auth';
 import express, { Request, Response, Router } from 'express';
 import SendError from '../common/utils/SendError';
 import Project from '../entities/Project';
-import User from '../entities/User';
 import HttpException from '../common/exceptions/HttpException';
+import UserService from '../services/UserService';
+import User from '../entities/User';
 
 export default class ProjectController {
 	public router: Router;
 	private projectService: ProjectService;
+	private userService: UserService;
 
 	constructor() {
 		this.projectService = new ProjectService();
@@ -34,11 +36,32 @@ export default class ProjectController {
 	public post = async (req: Request, res: Response) => {
 		try {
 			const project = req.body as Project;
-			project.owner = new User();
-			project.owner.id = req.userId;
+			const newProject = await this.projectService.create(
+				project,
+				req.userId
+			);
 
-			const newProject = await this.projectService.create(project);
 			res.status(201).send(newProject);
+		} catch (error) {
+			SendError(error, res);
+		}
+	};
+
+	public addUserToProject = async (req: Request, res: Response) => {
+		try {
+			const id = req.params.id;
+			const user = req.body as User;
+
+			if (!id) {
+				throw new HttpException(400, 'Bad parameter');
+			}
+
+			await this.projectService.addUserToProject(
+				id,
+				req.userId,
+				user.email
+			);
+			res.status(200).send();
 		} catch (error) {
 			SendError(error, res);
 		}
@@ -78,6 +101,7 @@ export default class ProjectController {
 
 		this.router.get('/', this.get);
 		this.router.post('/', this.post);
+		this.router.post('/:id/user', this.addUserToProject);
 		this.router.put('/:id', this.put);
 		this.router.delete('/:id', this.delete);
 	}

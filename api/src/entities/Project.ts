@@ -5,6 +5,8 @@ import {
 	Column,
 	OneToMany,
 	ManyToOne,
+	JoinTable,
+	ManyToMany,
 } from 'typeorm';
 import Issue from './Issue';
 import User from './User';
@@ -32,4 +34,8 @@ export default class Project {
 
 	@ManyToOne(() => User, (user) => user.issues)
 	owner: User;
+
+	@ManyToMany(() => User, (user) => user.projects)
+	@JoinTable()
+	users: User[];
 }
