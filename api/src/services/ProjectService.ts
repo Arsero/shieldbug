@@ -64,6 +64,10 @@ export default class ProjectService {
 			throw new EntityException('User not found');
 		}
 
+		if (projectDb.users.find((u) => u.id === user.id)) {
+			throw new EntityException('User already in this project');
+		}
+
 		projectDb.users.push(user);
 		return this.projectRepository.save(projectDb);
 	}
