@@ -60,9 +60,6 @@ export default class IssueService {
 			throw new EntityException('Project does not exist');
 		}
 
-		project.id = id;
-		return this.projectRepository.update(id, project);
-		
 		return this.issueRepository.update({ id: issue.id }, issue);
 	}
 
