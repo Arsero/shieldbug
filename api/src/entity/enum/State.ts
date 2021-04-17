@@ -1,4 +1,4 @@
-export enum State {
+export const enum State {
 	Open,
 	InProgress,
 	ToBeTested,
