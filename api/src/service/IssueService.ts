@@ -1,35 +1,29 @@
-import { getRepository, Repository } from 'typeorm';
+import { getCustomRepository } from 'typeorm';
 import EntityException from '../common/exception/EntityException';
 import Issue from '../entity/Issue';
-import Project from '../entity/Project';
+import IssueRepository from '../repository/IssueRepository';
+import ProjectRepository from '../repository/ProjectRepository';
 
 export default class IssueService {
-	private issueRepository: Repository<Issue>;
-	private projectRepository: Repository<Project>;
+	private issueRepository: IssueRepository;
+	private projectRepository: ProjectRepository;
 
 	constructor() {
-		this.issueRepository = getRepository(Issue);
-		this.projectRepository = getRepository(Project);
+		this.issueRepository = getCustomRepository(IssueRepository);
+		this.projectRepository = getCustomRepository(ProjectRepository);
 	}
 
-	public async get(projectId: string, userId: number) {
-		if (!projectId || !userId) {
+	public async get(projectId: string) {
+		if (!projectId) {
 			throw new EntityException('Missing parameter');
 		}
 
 		const project = await this.projectRepository.findOne(projectId, {
-			relations: ['owner', 'users', 'issues'],
+			relations: ['issues'],
 		});
 
 		if (!project) {
 			throw new EntityException('Project not found');
-		}
-
-		if (
-			project.owner.id != userId &&
-			!project.users.find((user) => user.id == userId)
-		) {
-			throw new EntityException('User not in this project');
 		}
 
 		return project.issues;
@@ -51,19 +45,19 @@ export default class IssueService {
 		return this.issueRepository.save(issue);
 	}
 
-	public async update(id: number, issue: Issue, userId: number) {
-		const projectDb = await this.projectRepository.findOne(id, {
-			relations: ['owner', 'users'],
-		});
-
-		if (!projectDb || projectDb.owner.id != userId) {
-			throw new EntityException('Project does not exist');
+	public async update(id: number, issue: Issue) {
+		if (!(await this.issueRepository.isExistsById(id))) {
+			throw new EntityException('Issue not found');
 		}
 
-		return this.issueRepository.update({ id: issue.id }, issue);
+		return this.issueRepository.update(id, issue);
 	}
 
-	public async remove(issueId: number) {
-		return this.issueRepository.delete(issueId);
+	public async delete(id: number) {
+		if (!(await this.issueRepository.isExistsById(id))) {
+			throw new EntityException('Project not found');
+		}
+
+		return this.issueRepository.delete(id);
 	}
 }
