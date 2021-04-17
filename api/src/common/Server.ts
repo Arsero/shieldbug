@@ -4,12 +4,14 @@ import express from 'express';
 import helmet from 'helmet';
 import ProjectController from '../controller/ProjectController';
 import UserController from '../controller/UserController';
+import IssueController from '../controller/IssueController';
 
 export default class Server {
 	private app: express.Application;
 	private port: number;
 	private userController: UserController;
 	private projectController: ProjectController;
+	private issueController: IssueController;
 
 	constructor() {
 		this.app = express();
@@ -29,11 +31,13 @@ export default class Server {
 	public controllers() {
 		this.userController = new UserController();
 		this.projectController = new ProjectController();
+		this.issueController = new IssueController();
 	}
 
 	public routes() {
 		this.app.use('/user/', this.userController.router);
-		this.app.use('/project/', this.projectController.router);
+		this.app.use('/projects/', this.projectController.router);
+		this.app.use('/project/', this.issueController.router);
 	}
 
 	public middlewares() {
