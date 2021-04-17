@@ -2,8 +2,8 @@ import { notFound } from './../middleware/notFound';
 import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
-import ProjectController from '../controllers/ProjectController';
-import UserController from './../controllers/UserController';
+import ProjectController from '../controller/ProjectController';
+import UserController from '../controller/UserController';
 
 export default class Server {
 	private app: express.Application;

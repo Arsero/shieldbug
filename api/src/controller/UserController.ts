@@ -1,7 +1,7 @@
-import User from './../entities/User';
+import User from '../entity/User';
 import express, { Request, Response, Router } from 'express';
-import HttpException from '../common/exceptions/HttpException';
-import UserService from '../services/UserService';
+import HttpException from '../common/exception/HttpException';
+import UserService from '../service/UserService';
 import SendError from '../common/utils/SendError';
 
 export default class UserController {

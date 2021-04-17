@@ -1,7 +1,7 @@
 import { getRepository, Repository } from 'typeorm';
-import EntityException from '../common/exceptions/EntityException';
-import Issue from '../entities/Issue';
-import Project from '../entities/Project';
+import EntityException from '../common/exception/EntityException';
+import Issue from '../entity/Issue';
+import Project from '../entity/Project';
 
 export default class IssueService {
 	private issueRepository: Repository<Issue>;

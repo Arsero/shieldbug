@@ -1,40 +1,38 @@
-import { getRepository, Repository } from 'typeorm';
-import EntityException from '../common/exceptions/EntityException';
-import Project from '../entities/Project';
-import User from '../entities/User';
+import { getCustomRepository } from 'typeorm';
+import EntityException from '../common/exception/EntityException';
+import Project from '../entity/Project';
+import User from '../entity/User';
+import ProjectRepository from '../repository/ProjectRepository';
+import UserRepository from '../repository/UserRepository';
 
 export default class ProjectService {
-	private projectRepository: Repository<Project>;
-	private userRepository: Repository<User>;
+	private projectRepository: ProjectRepository;
+	private userRepository: UserRepository;
 
 	constructor() {
-		this.projectRepository = getRepository(Project);
-		this.userRepository = getRepository(User);
+		this.projectRepository = getCustomRepository(ProjectRepository);
+		this.userRepository = getCustomRepository(UserRepository);
 	}
 
-	public async get(userId: number) {
-		const user = await this.userRepository.findOne(userId, {
-			relations: ['projects', 'projectsCreated'],
-		});
-
-		if (!user) {
-			throw new EntityException('User not found');
-		}
-
-		return [...user.projectsCreated, ...user.projects];
-	}
-
-	public async create(project: Project, userId: number) {
-		if (!project || !project.title || !userId) {
+	public async get(userId: number): Promise<Project[]> {
+		if (!userId || !(await this.userRepository.isExistsById(userId))) {
 			throw new EntityException('Missing parameter');
 		}
 
-		project.owner = new User();
-		project.owner.id = userId;
-		project.created = new Date();
-		project.users = [project.owner];
+		return this.userRepository.getProjects(userId);
+	}
 
-		return this.projectRepository.save(project);
+	public async create(project: Project, userId: number) {
+		if (
+			!project ||
+			!project.title ||
+			!userId ||
+			!(await this.userRepository.isExistsById(userId))
+		) {
+			throw new EntityException('Missing parameter');
+		}
+
+		return this.projectRepository.add(project, userId);
 	}
 
 	public async addUserToProject(

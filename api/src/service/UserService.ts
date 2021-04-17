@@ -1,14 +1,15 @@
-import { getRepository, Repository } from 'typeorm';
-import User from '../entities/User';
+import UserRepository from './../repository/UserRepository';
+import { getCustomRepository } from 'typeorm';
+import User from '../entity/User';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import EntityException from '../common/exceptions/EntityException';
+import EntityException from '../common/exception/EntityException';
 
 export default class UserService {
-	private userRepository: Repository<User>;
+	private userRepository: UserRepository;
 
 	constructor() {
-		this.userRepository = getRepository(User);
+		this.userRepository = getCustomRepository(UserRepository);
 	}
 
 	public async create(user: User) {
@@ -16,11 +17,12 @@ export default class UserService {
 			throw new EntityException('Missing parameter');
 		}
 
-		const userDb = await this.userRepository.findOne({
-			where: [{ username: user.username }, { email: user.email }],
-		});
-
-		if (userDb) {
+		if (
+			await this.userRepository.isExistsByProperty(
+				user.username,
+				user.email
+			)
+		) {
 			throw new EntityException('User already exists');
 		}
 

@@ -1,6 +1,6 @@
 import express from 'express';
-import EntityException from '../exceptions/EntityException';
-import HttpException from '../exceptions/HttpException';
+import EntityException from '../exception/EntityException';
+import HttpException from '../exception/HttpException';
 
 export default (err: Error, res: express.Response) => {
 	let httpException: HttpException;

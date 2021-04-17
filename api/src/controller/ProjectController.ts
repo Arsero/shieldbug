@@ -1,10 +1,10 @@
-import ProjectService from './../services/ProjectService';
-import { auth } from './../middleware/auth';
+import ProjectService from '../service/ProjectService';
+import { auth } from '../middleware/auth';
 import express, { Request, Response, Router } from 'express';
 import SendError from '../common/utils/SendError';
-import Project from '../entities/Project';
-import HttpException from '../common/exceptions/HttpException';
-import User from '../entities/User';
+import Project from '../entity/Project';
+import HttpException from '../common/exception/HttpException';
+import User from '../entity/User';
 
 export default class ProjectController {
 	public router: Router;

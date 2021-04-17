@@ -1,7 +1,7 @@
 import SendError from '../common/utils/SendError';
 import * as express from 'express';
 import jwt from 'jsonwebtoken';
-import HttpException from '../common/exceptions/HttpException';
+import HttpException from '../common/exception/HttpException';
 
 export const auth = (
 	req: express.Request,
