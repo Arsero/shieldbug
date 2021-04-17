@@ -15,7 +15,7 @@ export const auth = (
 			const token = authHeader.split(' ')[1];
 			jwt.verify(token, process.env.SECRET_TOKEN, (err, userId) => {
 				if (err) {
-					throw new HttpException(401, 'Unauthorized');
+					throw new HttpException(401, 'Bad credentials');
 				}
 
 				req.userId = userId.userId;

@@ -5,8 +5,7 @@ import HttpException from '../exception/HttpException';
 export default (err: Error, res: express.Response) => {
 	let httpException: HttpException;
 
-	console.debug(err);
-
+	console.debug(err.message);
 	if (err instanceof HttpException) {
 		httpException = err;
 	} else if (err instanceof EntityException) {

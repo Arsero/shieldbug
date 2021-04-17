@@ -54,11 +54,7 @@ export default class ProjectController {
 				throw new HttpException(400, 'Bad parameter');
 			}
 
-			await this.projectService.addUserToProject(
-				id,
-				req.userId,
-				user.email
-			);
+			await this.projectService.addUser(id, req.userId, user.email);
 			res.status(200).send();
 		} catch (error) {
 			SendError(error, res);
@@ -73,6 +69,7 @@ export default class ProjectController {
 			if (!id) {
 				throw new HttpException(400, 'Bad parameter');
 			}
+
 			await this.projectService.update(id, project, req.userId);
 			res.status(200).send();
 		} catch (error) {
