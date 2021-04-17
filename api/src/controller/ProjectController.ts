@@ -1,4 +1,4 @@
-import { userIsOwner } from './../middleware/userProject';
+import { userIsOwner } from '../middleware/inProject';
 import { validUUID } from '../middleware/validUUID';
 import ProjectService from '../service/ProjectService';
 import { auth } from '../middleware/auth';
@@ -52,10 +52,6 @@ export default class ProjectController {
 			const id = req.params.id;
 			const user = req.body as User;
 
-			if (!id) {
-				throw new HttpException(400, 'Bad parameter');
-			}
-
 			await this.projectService.addUser(id, user.email);
 			res.status(200).send();
 		} catch (error) {
@@ -68,10 +64,6 @@ export default class ProjectController {
 			const id = req.params.id;
 			const project = req.body as Project;
 
-			if (!id) {
-				throw new HttpException(400, 'Bad parameter');
-			}
-
 			await this.projectService.update(id, project);
 			res.status(200).send();
 		} catch (error) {
@@ -81,12 +73,7 @@ export default class ProjectController {
 
 	public delete = async (req: Request, res: Response) => {
 		try {
-			const id = req.params.id;
-			if (!id) {
-				throw new HttpException(400, 'Bad parameter');
-			}
-
-			await this.projectService.delete(id);
+			await this.projectService.delete(req.params.id);
 			res.status(200).send();
 		} catch (error) {
 			SendError(error, res);
