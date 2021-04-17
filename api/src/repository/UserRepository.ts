@@ -14,13 +14,11 @@ export default class UserRepository extends Repository<User> {
 			where: [{ username: username }, { email: email }],
 		});
 
-		console.log(user);
 		return Boolean(user);
 	}
 
 	public async isExistsById(id: number): Promise<boolean> {
 		const user = await this.findOne(id);
-		console.log(user);
 		return Boolean(user);
 	}
 
