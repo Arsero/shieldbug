@@ -9,7 +9,6 @@ export const validUUID = (
 	next: express.NextFunction
 ) => {
 	const id = req.params.id;
-	console.log(req.url);
 
 	if (id && !validate(id)) {
 		SendError(new HttpException(400, 'Invalid format UUID'), res);
