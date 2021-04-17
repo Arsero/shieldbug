@@ -16,7 +16,13 @@ export const userIsOwner = async (
 	if (!id || (await projectRepository.isOwner(id, userId))) {
 		next();
 	} else {
-		SendError(new HttpException(401, 'You are not the owner'), res);
+		SendError(
+			new HttpException(
+				401,
+				'The project is not found or you are not the owner'
+			),
+			res
+		);
 	}
 };
 
@@ -32,6 +38,12 @@ export const userIsInProject = async (
 	if (!id || (await projectRepository.isInProject(id, userId))) {
 		next();
 	} else {
-		SendError(new HttpException(401, 'You are not the owner'), res);
+		SendError(
+			new HttpException(
+				401,
+				'The project is not found or you are not in'
+			),
+			res
+		);
 	}
 };
