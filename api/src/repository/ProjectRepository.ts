@@ -1,5 +1,6 @@
 import { EntityRepository, Repository } from 'typeorm';
 import EntityException from '../common/exception/EntityException';
+import Issue from '../entity/Issue';
 import Project from '../entity/Project';
 import User from '../entity/User';
 
@@ -18,8 +19,12 @@ export default class ProjectRepository extends Repository<Project> {
 			relations: ['owner', 'users'],
 		});
 
+		if (!project) {
+			return false;
+		}
+
 		const user = project.users.find((user) => user.id == userId);
-		return project && (project.owner.id == userId || Boolean(user));
+		return project.owner.id == userId || Boolean(user);
 	}
 
 	public async addUser(id: string, user: User): Promise<Project> {
@@ -45,5 +50,17 @@ export default class ProjectRepository extends Repository<Project> {
 	public async isExistsById(id: string): Promise<boolean> {
 		const project = await this.findOne(id);
 		return Boolean(project);
+	}
+
+	public async getIssues(id: string): Promise<Issue[]> {
+		const project = await this.findOne(id, {
+			relations: ['issues'],
+		});
+
+		if (!project) {
+			throw new EntityException('Project not found');
+		}
+
+		return project.issues;
 	}
 }

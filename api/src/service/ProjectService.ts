@@ -1,6 +1,5 @@
 import { getCustomRepository } from 'typeorm';
 import EntityException from '../common/exception/EntityException';
-import HttpException from '../common/exception/HttpException';
 import Project from '../entity/Project';
 import User from '../entity/User';
 import ProjectRepository from '../repository/ProjectRepository';
@@ -20,7 +19,7 @@ export default class ProjectService {
 			throw new EntityException('Missing parameter');
 		}
 
-		return await this.userRepository.getProjects(userId);
+		return this.userRepository.getProjects(userId);
 	}
 
 	public async create(project: Project, userId: number) {
