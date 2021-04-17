@@ -10,7 +10,7 @@ export default class ProjectRepository extends Repository<Project> {
 			relations: ['owner'],
 		});
 
-		return project.owner.id == userId;
+		return project && project.owner.id == userId;
 	}
 
 	public async isInProject(id: string, userId: number): Promise<boolean> {
@@ -19,7 +19,7 @@ export default class ProjectRepository extends Repository<Project> {
 		});
 
 		const user = project.users.find((user) => user.id == userId);
-		return project.owner.id == userId || Boolean(user);
+		return project && (project.owner.id == userId || Boolean(user));
 	}
 
 	public async addUser(id: string, user: User): Promise<Project> {

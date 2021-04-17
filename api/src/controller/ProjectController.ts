@@ -1,3 +1,5 @@
+import { userIsOwner } from './../middleware/userProject';
+import { validUUID } from '../middleware/validUUID';
 import ProjectService from '../service/ProjectService';
 import { auth } from '../middleware/auth';
 import express, { Request, Response, Router } from 'express';
@@ -54,7 +56,7 @@ export default class ProjectController {
 				throw new HttpException(400, 'Bad parameter');
 			}
 
-			await this.projectService.addUser(id, req.userId, user.email);
+			await this.projectService.addUser(id, user.email);
 			res.status(200).send();
 		} catch (error) {
 			SendError(error, res);
@@ -70,7 +72,7 @@ export default class ProjectController {
 				throw new HttpException(400, 'Bad parameter');
 			}
 
-			await this.projectService.update(id, project, req.userId);
+			await this.projectService.update(id, project);
 			res.status(200).send();
 		} catch (error) {
 			SendError(error, res);
@@ -84,7 +86,7 @@ export default class ProjectController {
 				throw new HttpException(400, 'Bad parameter');
 			}
 
-			await this.projectService.delete(id, req.userId);
+			await this.projectService.delete(id);
 			res.status(200).send();
 		} catch (error) {
 			SendError(error, res);
@@ -93,6 +95,8 @@ export default class ProjectController {
 
 	public routes() {
 		this.router.use(auth);
+		this.router.use('/:id', validUUID);
+		this.router.use('/:id', userIsOwner);
 
 		this.router.get('/', this.get);
 		this.router.post('/', this.post);

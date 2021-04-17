@@ -5,7 +5,6 @@ import Project from '../entity/Project';
 import User from '../entity/User';
 import ProjectRepository from '../repository/ProjectRepository';
 import UserRepository from '../repository/UserRepository';
-import validate from 'uuid-validate';
 
 export default class ProjectService {
 	private projectRepository: ProjectRepository;
@@ -41,10 +40,7 @@ export default class ProjectService {
 		return this.projectRepository.save(project);
 	}
 
-	public async addUser(id: string, ownerId: number, userEmail: string) {
-		this.validUUID(id);
-		await this.checkOwner(id, ownerId);
-
+	public async addUser(id: string, userEmail: string) {
 		const user = await this.userRepository.findOne({ email: userEmail });
 		if (!user) {
 			throw new EntityException('User not found');
@@ -53,10 +49,7 @@ export default class ProjectService {
 		return this.projectRepository.addUser(id, user);
 	}
 
-	public async update(id: string, project: Project, userId: number) {
-		this.validUUID(id);
-		await this.checkOwner(id, userId);
-
+	public async update(id: string, project: Project) {
 		if (!(await this.projectRepository.isExistsById(id))) {
 			throw new EntityException('Project not found');
 		}
@@ -64,25 +57,11 @@ export default class ProjectService {
 		return this.projectRepository.update(id, project);
 	}
 
-	public async delete(id: string, userId: number) {
-		this.validUUID(id);
-		await this.checkOwner(id, userId);
+	public async delete(id: string) {
 		if (!(await this.projectRepository.isExistsById(id))) {
 			throw new EntityException('Project not found');
 		}
 
 		return this.projectRepository.delete(id);
-	}
-
-	private async checkOwner(id: string, userId: number): Promise<void> {
-		if (!(await this.projectRepository.isOwner(id, userId))) {
-			throw new HttpException(401, 'You are not the owner');
-		}
-	}
-
-	private validUUID(uuid: string): void {
-		if (!validate(uuid)) {
-			throw new EntityException('Invalid format UUID');
-		}
 	}
 }
