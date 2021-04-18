@@ -72,9 +72,9 @@ export default class IssueController {
 		this.router.use('/:id', validUUID);
 		this.router.use('/:id', userIsInProject);
 
-		this.router.get('/:id', this.get);
-		this.router.post('/:id', this.post);
-		this.router.put('/:id/:issueId', this.put);
-		this.router.delete('/:id/:issueId', this.delete);
+		this.router.get('/:id/issues', this.get);
+		this.router.post('/:id/issues', this.post);
+		this.router.put('/:id/issues/:issueId', this.put);
+		this.router.delete('/:id/issues/:issueId', this.delete);
 	}
 }

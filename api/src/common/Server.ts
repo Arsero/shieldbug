@@ -35,9 +35,9 @@ export default class Server {
 	}
 
 	public routes() {
-		this.app.use('/user/', this.userController.router);
+		this.app.use('/users/', this.userController.router);
 		this.app.use('/projects/', this.projectController.router);
-		this.app.use('/project/', this.issueController.router);
+		this.app.use('/projects/', this.issueController.router);
 	}
 
 	public middlewares() {
