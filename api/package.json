@@ -21,6 +21,8 @@
 	},
 	"homepage": "https://github.com/Arsero/shieldbug#readme",
 	"dependencies": {
+		"@automapper/classes": "^3.5.2",
+		"@automapper/core": "^3.5.2",
 		"bcrypt": "^5.0.1",
 		"class-validator": "^0.13.1",
 		"cors": "^2.8.5",
@@ -30,11 +32,12 @@
 		"helmet": "^4.4.1",
 		"jsonwebtoken": "^8.5.1",
 		"pg": "^8.5.1",
-		"reflect-metadata": "^0.1.10",
+		"reflect-metadata": "^0.1.13",
 		"typeorm": "0.2.32",
 		"uuid-validate": "^0.0.3"
 	},
 	"devDependencies": {
+		"@automapper/types": "^3.5.2",
 		"@types/bcrypt": "^3.0.0",
 		"@types/cors": "^2.8.10",
 		"@types/dotenv": "^8.2.0",

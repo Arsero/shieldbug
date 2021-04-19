@@ -1,3 +1,4 @@
+import { Mapper } from '@automapper/types';
 import { userIsInProject } from '../middleware/inProject';
 import { validUUID } from '../middleware/validUUID';
 import { auth } from '../middleware/auth';
@@ -5,6 +6,8 @@ import express, { Request, Response, Router } from 'express';
 import SendError from '../common/utils/SendError';
 import IssueService from '../service/IssueService';
 import Issue from '../entity/Issue';
+import IssueDto from '../dtos/IssueDto';
+import { mapper } from '../service/mapper';
 
 export default class IssueController {
 	public router: Router;
@@ -26,7 +29,7 @@ export default class IssueController {
 			const projectId = req.params.id;
 			const issues = await this.issueService.get(projectId);
 
-			res.status(200).send(issues);
+			res.status(200).send(mapper.mapArray(issues, IssueDto, Issue));
 		} catch (error) {
 			SendError(error, res);
 		}

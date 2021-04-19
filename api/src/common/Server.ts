@@ -1,3 +1,5 @@
+import { Mapper } from '@automapper/types';
+import { mapper, initializeMapper } from './../service/mapper';
 import { notFound } from './../middleware/notFound';
 import cors from 'cors';
 import express from 'express';
@@ -19,6 +21,7 @@ export default class Server {
 		this.controllers();
 		this.routes();
 		this.middlewares();
+		this.useMapper();
 	}
 
 	public configuration() {
@@ -42,6 +45,10 @@ export default class Server {
 
 	public middlewares() {
 		this.app.use(notFound);
+	}
+
+	public useMapper() {
+		initializeMapper(mapper);
 	}
 
 	public start() {
