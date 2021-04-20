@@ -36,11 +36,16 @@ export default class IssueService {
 		if (!issue || !issue.title || !issue.description) {
 			throw new EntityException('Missing parameter');
 		}
+		if (
+			(issue.state && !Object.values(State).includes(issue.state)) ||
+			(issue.priority &&
+				!Object.values(Priority).includes(issue.priority))
+		) {
+			throw new EntityException('Bad parameter state or priority');
+		}
 
 		issue.lastUpdate = new Date();
 		issue.project = new Project({ id: projectId });
-		issue.state = issue.state || State.Open;
-		issue.priority = issue.priority || Priority.Trivial;
 
 		return this.issueRepository.save(issue);
 	}
@@ -48,6 +53,14 @@ export default class IssueService {
 	public async update(id: number, issue: Issue) {
 		if (!(await this.issueRepository.isExistsById(id))) {
 			throw new EntityException('Issue not found');
+		}
+
+		if (
+			(issue.state && !Object.values(State).includes(issue.state)) ||
+			(issue.priority &&
+				!Object.values(Priority).includes(issue.priority))
+		) {
+			throw new EntityException('Bad parameter state or priority');
 		}
 
 		return this.issueRepository.update(id, issue);

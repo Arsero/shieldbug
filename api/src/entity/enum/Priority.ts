@@ -1,4 +1,4 @@
-export const enum Priority {
+export enum Priority {
 	Trivial = 'trivial',
 	Minor = 'minor',
 	Major = 'major',
