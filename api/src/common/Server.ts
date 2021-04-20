@@ -1,4 +1,4 @@
-import { mapper, initializeMapper } from './../service/mapper';
+import { mapper, initializeMapper } from '../service/Mapper';
 import { notFound } from './../middleware/notFound';
 import cors from 'cors';
 import express from 'express';
