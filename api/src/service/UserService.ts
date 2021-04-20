@@ -12,17 +12,18 @@ export default class UserService {
 		this.userRepository = getCustomRepository(UserRepository);
 	}
 
-	public async create(user: User) {
+	public async create(user: User): Promise<User> {
 		if (!user || !user.email || !user.password || !user.username) {
 			throw new EntityException('Missing parameter');
 		}
 
-		if (
-			await this.userRepository.isExistsByProperty(
-				user.username,
-				user.email
-			)
-		) {
+		const userDb = await this.userRepository.isExistsByProperty(
+			new User({
+				username: user.username,
+				email: user.email,
+			})
+		);
+		if (userDb) {
 			throw new EntityException('User already exists');
 		}
 
@@ -34,7 +35,7 @@ export default class UserService {
 		return this.userRepository.save(secureUser);
 	}
 
-	public async login(email: string, password: string) {
+	public async login(email: string, password: string): Promise<string> {
 		if (!email || !password) {
 			throw new EntityException('Missing parameter');
 		}

@@ -5,6 +5,7 @@ import Issue from '../entity/Issue';
 import IssueRepository from '../repository/IssueRepository';
 import ProjectRepository from '../repository/ProjectRepository';
 import { State } from './../entity/enum/State';
+import Project from '../entity/Project';
 
 export default class IssueService {
 	private issueRepository: IssueRepository;
@@ -32,17 +33,12 @@ export default class IssueService {
 	}
 
 	public async create(issue: Issue, projectId: string) {
-		if (!issue || !issue.title || !issue.description || !projectId) {
+		if (!issue || !issue.title || !issue.description) {
 			throw new EntityException('Missing parameter');
 		}
 
-		const project = await this.projectRepository.findOne({ id: projectId });
-		if (!project) {
-			throw new EntityException('Project not found');
-		}
-
 		issue.lastUpdate = new Date();
-		issue.project = project;
+		issue.project = new Project({ id: projectId });
 		issue.state = issue.state || State.Open;
 		issue.priority = issue.priority || Priority.Trivial;
 
