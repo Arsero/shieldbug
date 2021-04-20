@@ -29,11 +29,11 @@ export default class Issue {
 	lastUpdate: Date;
 
 	@AutoMap()
-	@Column('int')
+	@Column('text')
 	state: State;
 
 	@AutoMap()
-	@Column('int')
+	@Column('text')
 	priority: Priority;
 
 	@ManyToOne(() => Project, (project) => project.issues)

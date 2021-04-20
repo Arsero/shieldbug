@@ -1,7 +1,7 @@
 export const enum Priority {
-	Trivial,
-	Minor,
-	Major,
-	Critical,
-	Blocker,
+	Trivial = 'trivial',
+	Minor = 'minor',
+	Major = 'major',
+	Critical = 'critical',
+	Blocker = 'blocker',
 }

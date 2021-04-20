@@ -1,6 +1,6 @@
 export const enum State {
-	Open,
-	InProgress,
-	ToBeTested,
-	Closed,
+	Open = 'open',
+	InProgress = 'in progress',
+	ToBeTested = 'to be tested',
+	Closed = 'closed',
 }

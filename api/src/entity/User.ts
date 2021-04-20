@@ -3,18 +3,20 @@ import {
 	Entity,
 	PrimaryGeneratedColumn,
 	Column,
-	ManyToMany,
-	JoinTable,
 	OneToMany,
 	Unique,
 } from 'typeorm';
 import Issue from './Issue';
-import Project from './Project';
+import UserProject from './UserProject';
 
 @Entity()
 @Unique(['username'])
 @Unique(['email'])
 export default class User {
+	public constructor(init?: Partial<User>) {
+		Object.assign(this, init);
+	}
+
 	@PrimaryGeneratedColumn()
 	id: number;
 
@@ -31,13 +33,9 @@ export default class User {
 	@IsNotEmpty({ message: 'The password is required' })
 	password: string;
 
-	@ManyToMany(() => Project)
-	@JoinTable()
-	projects: Project[];
-
 	@OneToMany(() => Issue, (issue) => issue.project)
 	issues: Issue[];
 
-	@OneToMany(() => Project, (project) => project.owner)
-	projectsCreated: Project[];
+	@OneToMany(() => UserProject, (userProject) => userProject.user)
+	userProjects: UserProject[];
 }
