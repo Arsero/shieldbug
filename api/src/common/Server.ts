@@ -1,4 +1,3 @@
-import { Mapper } from '@automapper/types';
 import { mapper, initializeMapper } from './../service/mapper';
 import { notFound } from './../middleware/notFound';
 import cors from 'cors';
@@ -7,6 +6,9 @@ import helmet from 'helmet';
 import ProjectController from '../controller/ProjectController';
 import UserController from '../controller/UserController';
 import IssueController from '../controller/IssueController';
+import morgan from 'morgan';
+import fs from 'fs';
+import path from 'path';
 
 export default class Server {
 	private app: express.Application;
@@ -26,6 +28,11 @@ export default class Server {
 
 	public configuration() {
 		this.port = parseInt(process.env.PORT as string, 10);
+		var accessLogStream = fs.createWriteStream(
+			path.join(__dirname, 'access.log'),
+			{ flags: 'a' }
+		);
+		this.app.use(morgan('combined', { stream: accessLogStream }));
 		this.app.use(helmet());
 		this.app.use(cors());
 		this.app.use(express.json());
