@@ -28,11 +28,9 @@ export default class Issue {
 	@IsDate()
 	lastUpdate: Date;
 
-	@AutoMap()
 	@Column('text')
 	state: State;
 
-	@AutoMap()
 	@Column('text')
 	priority: Priority;
 

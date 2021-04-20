@@ -41,7 +41,8 @@ export default class IssueController {
 			const issue = req.body as Issue;
 			const newIssue = await this.issueService.create(issue, projectId);
 
-			res.status(201).send(newIssue, IssueDto, Issue));
+			const issuedto = mapper.map(newIssue, IssueDto, Issue);
+			res.status(201).send(issuedto);
 		} catch (error) {
 			SendError(error, res);
 		}
