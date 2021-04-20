@@ -1,13 +1,13 @@
-import { Mapper } from '@automapper/types';
-import { userIsInProject } from '../middleware/inProject';
 import { validUUID } from '../middleware/validUUID';
-import { auth } from '../middleware/auth';
+import { authenticate } from '../middleware/authenticate';
 import express, { Request, Response, Router } from 'express';
 import SendError from '../common/utils/SendError';
 import IssueService from '../service/IssueService';
 import Issue from '../entity/Issue';
 import IssueDto from '../dtos/IssueDto';
-import { mapper } from '../service/mapper';
+import { mapper } from '../service/Mapper';
+import { authorize } from '../middleware/authorize';
+import { Role } from '../entity/enum/Role';
 
 export default class IssueController {
 	public router: Router;
@@ -41,7 +41,7 @@ export default class IssueController {
 			const issue = req.body as Issue;
 			const newIssue = await this.issueService.create(issue, projectId);
 
-			res.status(201).send(newIssue);
+			res.status(201).send(newIssue, IssueDto, Issue));
 		} catch (error) {
 			SendError(error, res);
 		}
@@ -71,9 +71,9 @@ export default class IssueController {
 	};
 
 	public routes() {
-		this.router.use(auth);
+		this.router.use(authenticate);
 		this.router.use('/:id', validUUID);
-		this.router.use('/:id', userIsInProject);
+		this.router.use('/:id', authorize([Role.User, Role.Owner]));
 
 		this.router.get('/:id/issues', this.get);
 		this.router.post('/:id/issues', this.post);

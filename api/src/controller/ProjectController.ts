@@ -1,12 +1,14 @@
-import { userIsOwner } from '../middleware/inProject';
+import { authorize } from './../middleware/authorize';
 import { validUUID } from '../middleware/validUUID';
 import ProjectService from '../service/ProjectService';
-import { auth } from '../middleware/auth';
+import { authenticate } from '../middleware/authenticate';
 import express, { Request, Response, Router } from 'express';
 import SendError from '../common/utils/SendError';
 import Project from '../entity/Project';
-import HttpException from '../common/exception/HttpException';
 import User from '../entity/User';
+import { Role } from '../entity/enum/Role';
+import ProjectDto from '../dtos/ProjectDto';
+import { mapper } from '../service/Mapper';
 
 export default class ProjectController {
 	public router: Router;
@@ -27,7 +29,9 @@ export default class ProjectController {
 		try {
 			const projects = await this.projectService.get(req.userId);
 
-			res.status(200).send(projects);
+			res.status(200).send(
+				mapper.mapArray(projects, ProjectDto, Project)
+			);
 		} catch (error) {
 			SendError(error, res);
 		}
@@ -41,7 +45,7 @@ export default class ProjectController {
 				req.userId
 			);
 
-			res.status(201).send(newProject);
+			res.status(201).send(mapper.map(newProject, ProjectDto, Project));
 		} catch (error) {
 			SendError(error, res);
 		}
@@ -81,9 +85,9 @@ export default class ProjectController {
 	};
 
 	public routes() {
-		this.router.use(auth);
+		this.router.use(authenticate);
 		this.router.use('/:id', validUUID);
-		this.router.use('/:id', userIsOwner);
+		this.router.use('/:id', authorize([Role.Owner]));
 
 		this.router.get('/', this.get);
 		this.router.post('/', this.post);

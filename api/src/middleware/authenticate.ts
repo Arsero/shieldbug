@@ -3,7 +3,7 @@ import * as express from 'express';
 import jwt from 'jsonwebtoken';
 import HttpException from '../common/exception/HttpException';
 
-export const auth = (
+export const authenticate = (
 	req: express.Request,
 	res: express.Response,
 	next: express.NextFunction
@@ -18,7 +18,7 @@ export const auth = (
 					throw new HttpException(401, 'Bad credentials');
 				}
 
-				req.userId = userId.userId;
+				req.userId = (userId as express.Request).userId;
 				next();
 			});
 		} else {
